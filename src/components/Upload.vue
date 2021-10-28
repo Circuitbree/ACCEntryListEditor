@@ -4,7 +4,7 @@
       <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
         <h1>Upload images</h1>
         <div class="dropbox">
-          <input type="file" multiple :name="uploadFieldName" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept=".json,application/json" class="input-file">
+          <input type="file" multiple :name="qResultsUpload" :disabled="isSaving" @change="filesChange($event.target.name, $event.target.files); fileCount = $event.target.files.length" accept=".json,application/json" class="input-file">
             <p v-if="isInitial">
               Drag your file(s) here to begin<br> or click to browse
             </p>
@@ -28,7 +28,7 @@
         uploadedFiles: [],
         uploadError: null,
         currentStatus: null,
-        uploadFieldName: 'photos'
+        uploadFieldName: 'qres'
       }
     },
     computed: {

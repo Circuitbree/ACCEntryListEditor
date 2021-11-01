@@ -39,19 +39,19 @@
       Driver,
     },
     props: {
-        initialList: Object,
+        initialList: Array,
         showControls: Boolean,
         disableDragging: Boolean
     },
     data() {
       return {
-        driverList: this.initialList.copy(),
+        driverList: this.initialList.slice(),
         drag: false
       }
     },
-     methods: {
+    methods: {
       reset() {
-        this.driverList = this.initialList.copy();
+        this.driverList = this.initialList.slice();
       },
       reverse() {
         this.driverList = this.driverList.reverse();

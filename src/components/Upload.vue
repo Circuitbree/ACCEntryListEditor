@@ -1,17 +1,22 @@
 <template>
-  <div id="upload">
-    <div class="container">
+  <div id="upload col-12">
+    <div class="col-12">
       <form enctype="multipart/form-data" novalidate v-if="!FILE_UPLOADED">
-        <h1>Upload Qualification Results</h1>
+        <h1>Upload Entrylist to edit.</h1>
         <div class="dropbox">
-          <input type="file" :name="qResultsUpload" @change="handleUpload($event)" accept=".json,application/json" class="input-file">
+          <input type="file" @change="handleUpload($event)" accept=".json,application/json" class="input-file">
             <p>
               Click to browse
             </p>
         </div>
       </form>
+      <div v-if="FILE_ERROR">
+        <p class="error">
+          The uploaded file could not be parsed. Make sure to upload an entry list.
+        </p>
+      </div>
       <div v-if="FILE_UPLOADED">
-        <Editor></Editor>
+        <Editor :qResults="driverList"></Editor>
       </div>
     </div>
   </div>
@@ -24,17 +29,32 @@
       Editor
     },
     data() {
-      return {FILE_UPLOADED:false, parsedResults:null}
+      return {FILE_UPLOADED:false, FILE_ERROR:false, parsedResults:null, driverList:[]}
     },
     methods: {
       handleUpload(event) {
-        this.FILE_UPLOADED = !this.FILE_UPLOADED;
-        event.target.files[0].text().then((value) => {this.parseJson(value)})
+        var reader = new FileReader();
+        reader.addEventListener("load", () => {
+          this.parseJson(reader.result);
+        }, false);
+        reader.readAsText(event.target.files[0], 'UTF-16LE');
       },
       parseJson(data) {
         this.parsedResults = JSON.parse(data);
 
-        // todo error check
+        var error = this.checkParsedData();
+
+        if(error) {
+          this.FILE_ERROR = true;
+           this.driverList = [];
+        } else {
+          this.driverList = this.parsedResults["entries"];
+          this.FILE_ERROR = false;
+          this.FILE_UPLOADED = !this.FILE_UPLOADED;
+        }
+      },
+      checkParsedData() {
+        return this.parsedResults['entries'] == null || this.parsedResults['entries'].length <= 0;
       }
     }
   }
@@ -51,11 +71,12 @@
     min-height: 200px; /* minimum height */
     position: relative;
     cursor: pointer;
-  }
+    width: 50%;
+    }
 
   .input-file {
     opacity: 0; /* invisible but it's there! */
-    width: 50%;
+    width: 100%;
     height: 200px;
     position: absolute;
     cursor: pointer;
@@ -69,5 +90,9 @@
     font-size: 1.2em;
     text-align: center;
     padding: 50px 0;
+  }
+
+  .error {
+    color: red;
   }
 </style>

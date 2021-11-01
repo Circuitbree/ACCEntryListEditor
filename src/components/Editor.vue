@@ -1,10 +1,14 @@
 <template>
   <div class="container col-12">
     <div class="col-6">
-      <Driverlist :initialList="qResults" :showControls="false" :draggingDisabled="false"></Driverlist>
+      <template v-for="element in qResults" :key="element">
+        <li class="list-group-item">
+          <Driver :driverData="element"></Driver>
+        </li>
+      </template>
     </div>
     <div class="col-6">
-      <Driverlist :initialList="qResults" :showControls="true" :draggingDisabled="true"></Driverlist>
+      <Driverlist :initialList="qResults" :showControls="true" :disableDragging="false"/>
     </div>
   </div>
 </template>
@@ -13,9 +17,7 @@
   import Driverlist from './Driverlist.vue'
   
   export default {
-    compenents: {
-      Driverlist,
-    },
+    components: { Driverlist },
     props: {
         qResults: Object
     },
@@ -24,3 +26,9 @@
     },
   }
 </script>
+
+<style scoped>
+  .list-group {
+    min-height: 20px;
+  }
+</style>

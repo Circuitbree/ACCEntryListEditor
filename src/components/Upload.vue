@@ -16,14 +16,14 @@
         </p>
       </div>
       <div v-if="FILE_UPLOADED">
-        <Editor :qResults="driverList"></Editor>
+        <Editor :qResults="driverList" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import Editor from "./Editor.vue"
+  import Editor from "./Editor"
   export default {
     components: {
       Editor

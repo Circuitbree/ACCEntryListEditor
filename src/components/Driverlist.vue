@@ -9,13 +9,13 @@
     }"
     v-model="driverList"
     v-bind="dragOptions"
-    @start="drag = true"
+    @start="drag = !disableDragging"
     @end="drag = false"
     item-key="order"
   >
     <template #item="{ element }">
       <li class="list-group-item">
-        <Driver :driverData="element"></Driver>
+        <Driver :driverData="element.item"></Driver>
       </li>
     </template>
   </draggable>
@@ -34,7 +34,7 @@
   import Driver from './Driver.vue'
 
   export default {
-    compenents: {
+    components: {
       draggable,
       Driver,
     },
@@ -45,16 +45,22 @@
     },
     data() {
       return {
-        driverList: this.initialList.slice(),
+        driverList: this.getInitialList(),
         drag: false
       }
     },
     methods: {
       reset() {
-        this.driverList = this.initialList.slice();
+        this.driverList = this.getInitialList();
       },
       reverse() {
         this.driverList = this.driverList.reverse();
+      },
+      getInitialList() {
+        return this.initialList.slice().map((item, index) => {
+            return { item, order: index + 1 }; 
+          }
+        )
       }
     },
     computed: {

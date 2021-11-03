@@ -15,17 +15,20 @@
   >
     <template #item="{ element }">
       <li class="list-group-item">
-        <Driver :driverData="element.item"></Driver>
+        <Driver :driverData="element.item" :showDropdown="true"></Driver>
       </li>
     </template>
   </draggable>
-  <div v-if="showControls">
-    <button class="btn btn-secondary button" @click="reset">
+  <div v-if="showControls" class="row">
+    <button class="btn btn-secondary button col-4" @click="reset">
       Reset
     </button>
-    <button class="btn btn-secondary button" @click="reverse">
+    <button class="btn btn-secondary button col-4" @click="reverse">
       Reverse
     </button>
+    <a id="download" download="entrylist.json" class="btn btn-secondary button col-4" @mousedown="download">
+      <i class="fa fa-download" aria-hidden="true"></i> Download
+    </a>
   </div>
 </template>
 
@@ -39,7 +42,7 @@
       Driver,
     },
     props: {
-        initialList: Array,
+        initialList: Object,
         showControls: Boolean,
         disableDragging: Boolean
     },
@@ -56,8 +59,14 @@
       reverse() {
         this.driverList = this.driverList.reverse();
       },
+      download(){
+        var list = JSON.parse(JSON.stringify(this.initialList))
+        list['entries'] = this.driverList.map((item) => item["item"])
+
+        document.getElementById('download').setAttribute('href', "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(list)))
+      },
       getInitialList() {
-        return this.initialList.slice().map((item, index) => {
+        return this.initialList['entries'].slice().map((item, index) => {
             return { item, order: index + 1 }; 
           }
         )

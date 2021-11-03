@@ -1,11 +1,11 @@
 <template>
-  <div class="container col-12">
+  <div class="container row">
     <div class="col-6">
-      <template v-for="element in qResults" :key="element">
+      <ul class="list-group" v-for="element in qResults['entries']" :key="element">
         <li class="list-group-item">
-          <Driver :driverData="element"></Driver>
+          <Driver :driverData="element" :showDropdown="false"></Driver>
         </li>
-      </template>
+      </ul>
     </div>
     <div class="col-6">
       <Driverlist :initialList="qResults" :showControls="true" :disableDragging="false"/>
@@ -15,9 +15,10 @@
 
 <script>
   import Driverlist from './Driverlist.vue'
+  import Driver from './Driver.vue'
   
   export default {
-    components: { Driverlist },
+    components: { Driverlist, Driver },
     props: {
         qResults: Object
     },

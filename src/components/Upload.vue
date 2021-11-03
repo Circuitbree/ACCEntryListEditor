@@ -48,7 +48,7 @@
           this.FILE_ERROR = true;
            this.driverList = [];
         } else {
-          this.driverList = this.parsedResults["entries"];
+          this.driverList = this.parsedResults;
           this.FILE_ERROR = false;
           this.FILE_UPLOADED = !this.FILE_UPLOADED;
         }

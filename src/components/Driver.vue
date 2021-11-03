@@ -1,6 +1,6 @@
 <template>
     <div class="driver-container">
-        <i></i>
+        <i v-if="showDropdown" class="fas fa-chevron-down" @click="dropdown()"></i>
         {{driverData["raceNumber"]}}
     </div>
 </template>
@@ -9,11 +9,17 @@
   
   export default {
     props: {
-        driverData: Object
+        driverData: Object,
+        showDropdown: Boolean
     },
     data() {
       return {}
     },
+    methods: {
+      dropdown(){
+        console.log("yep")
+      }
+    }
   }
 </script>
 

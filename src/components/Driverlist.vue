@@ -61,7 +61,12 @@
       },
       download(){
         var list = JSON.parse(JSON.stringify(this.initialList))
+
         list['entries'] = this.driverList.map((item) => item["item"])
+        
+        for(var car of list['entries']) {
+          car['defaultGridPosition'] = list['entries'].indexOf(car) + 1;
+        }
 
         document.getElementById('download').setAttribute('href', "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(list)))
       },
@@ -85,17 +90,27 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
   .list-group {
     min-height: 20px;
   }
+
   .list-group-item {
+    background: rgba(0, 0, 0, 0.5)!important;
     cursor: move;
+    color: white!important;
+    outline: 2px ridge white;
+    outline-offset: -0.25em;
   }
+  
+  .sortable-chosen{
+    background: rgba(255, 0, 0, 0.5)!important;
+  }
+
   .flip-list-move {
     transition: transform 0.5s;
   }
+
   .no-move {
     transition: transform 0s;
   }

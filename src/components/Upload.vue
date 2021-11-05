@@ -1,13 +1,12 @@
 <template>
-  <div id="upload col-12">
+  <div class="upload row">
     <div class="col-12">
       <form enctype="multipart/form-data" novalidate v-if="!FILE_UPLOADED">
-        <h1>Upload Entrylist to edit.</h1>
-        <div class="dropbox">
-          <input type="file" @change="handleUpload($event)" accept=".json,application/json" class="input-file">
-            <p>
-              Click to browse
-            </p>
+        <div class="dropbox offset-3 col-6">
+          <p class="info">
+            Upload Entrylist <i class="fa fa-upload" aria-hidden="true"></i>
+          </p>
+          <input type="file" @change="handleUpload($event)" accept=".json,application/json" class="input-file" title=" ">
         </div>
       </form>
       <div v-if="FILE_ERROR">
@@ -60,36 +59,56 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background-image: url('~@/assets/background.png');
+  }
+
   .dropbox {
-    outline: 2px dashed grey; /* the dash box */
-    outline-offset: -10px;
-    background: lightcyan;
-    color: dimgray;
-    padding: 10px 10px;
-    min-height: 200px; /* minimum height */
+    outline: 2px ridge white;
+    outline-offset: -0.75em;
+    background: rgba(0, 0, 0, 0.5);
+    min-height: 150px;
     position: relative;
     cursor: pointer;
-    width: 50%;
-    }
+    overflow: hidden;
+    color: white;
+  }
 
   .input-file {
-    opacity: 0; /* invisible but it's there! */
+    opacity: 0; 
     width: 100%;
-    height: 200px;
-    position: absolute;
+    height: 100%;
     cursor: pointer;
+    min-height: 150px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
   }
 
   .dropbox:hover {
-    background: lightblue; /* when mouse over to the drop zone, change color */
+    background: white;
+    color: black;
+    outline-color: lightskyblue;
+  }
+
+  .dropbox:hover .info i {
+    color: lightskyblue;
   }
 
   .dropbox p {
-    font-size: 1.2em;
+    font-size: 1.1em;
     text-align: center;
-    padding: 50px 0;
+    padding: 3.5em 0;
+    vertical-align: middle;
+    min-height: 150px;
+    margin-bottom: 0;
   }
 
   .error {

@@ -1,8 +1,8 @@
 <template>
   <div class="container row">
     <div class="col-6">
-      <ul class="list-group" v-for="element in qResults['entries']" :key="element">
-        <li class="list-group-item">
+      <ul class="list-group">
+        <li class="list-group-item" v-for="element in qResults['entries']" :key="element">
           <Driver :driverData="element" :showDropdown="false"></Driver>
         </li>
       </ul>
@@ -27,9 +27,3 @@
     },
   }
 </script>
-
-<style scoped>
-  .list-group {
-    min-height: 20px;
-  }
-</style>

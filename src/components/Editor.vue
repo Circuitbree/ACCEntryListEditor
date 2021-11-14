@@ -1,6 +1,6 @@
 <template>
   <div class="row controls">
-    <div class="margin-bottom-2">
+    <div class="margin-bottom-1">
       <button class="btn btn-secondary button" @click="$refs.editList.reset()">
         Reset
       </button>
@@ -14,6 +14,7 @@
   </div>
   <div class="row">
     <div class="col-6">
+      <h3>Original Order</h3>
       <ul class="list-group">
         <li class="list-group-item" v-for="element in qResults['entries']" :key="element">
           <Driver :driverData="element" :showMenu="false"></Driver>
@@ -21,6 +22,7 @@
       </ul>
     </div>
     <div class="col-6">
+      <h3>Edit Order</h3>
       <Driverlist ref="editList" :initialList="qResults" :disableDragging="false"/>
     </div>
   </div>
@@ -42,12 +44,16 @@
 </script>
 
 <style scoped>
-  .margin-bottom-2 {
-    margin-bottom: 2%;
+  .margin-bottom-1 {
+    margin-bottom: 1%;
   }
 
   .controls .btn {
-    margin: 1%;
+    margin: 0 1%;
     width: 30%;
+  }
+
+  h3 {
+    color: white;
   }
 </style>

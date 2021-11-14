@@ -83,4 +83,8 @@
     .car-drivers li {
       list-style: none;
     }
+
+    .car-drivers {
+      padding: 0;
+    }
 </style>

@@ -84,7 +84,7 @@
   }
 
   .list-group-item:nth-child(2n) {
-    margin-left: 33%;
+    margin-left: 45%;
   }
 
   .list-group-item {
@@ -92,8 +92,9 @@
     color: white!important;
     outline: 2px ridge white;
     outline-offset: -0.25em;
-    width: 66%;
+    width: 35%;
     margin-bottom: 5%;
+    margin-left: 20%;
     display: flex;
     align-items: center;
   }

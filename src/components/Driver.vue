@@ -1,7 +1,8 @@
 <template>
     <div class="driver-container">
-        <i v-if="showDropdown" class="fas fa-chevron-down pointer" @click="dropdown($event)"></i>
+        <i v-if="showMenu" class="fas fa-bars left"></i>
         #{{driverData["raceNumber"]}}
+        <i class="fas fa-chevron-down pointer right" @click="dropdown($event)"></i>
         <div class="content">
           <ul class="car-drivers">
             <li v-for="driver in driverData['drivers']" :key="driver" class="car-driver">
@@ -18,18 +19,20 @@
   export default {
     props: {
         driverData: Object,
-        showDropdown: Boolean
+        showMenu: Boolean
     },
     data() {
       return {}
     },
     methods: {
       dropdown(event) {
-        event.target.classList.toggle("active");
+        event.stopPropagation();
+
+        event.target.parentNode.parentNode.classList.toggle("menu-active");
         event.target.classList.toggle("fa-chevron-up");
         event.target.classList.toggle("fa-chevron-down");
 
-        var content = event.target.nextSibling.nextSibling;
+        var content = event.target.nextSibling;
         if (content.clientHeight) {
           content.style.height = 0;
         } else {
@@ -43,6 +46,14 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .left {
+      float: left;
+    }
+
+    .right {
+      float: right;
+    }
+
     .pointer {
         cursor: pointer;
     }
@@ -67,5 +78,9 @@
 
     .category-0 {
       color: #CD7F32; /* Bronze */
+    }
+
+    .car-drivers li {
+      list-style: none;
     }
 </style>

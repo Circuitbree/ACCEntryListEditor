@@ -15,21 +15,10 @@
   >
     <template #item="{ element }">
       <li class="list-group-item">
-        <Driver :driverData="element.item" :showDropdown="true"></Driver>
+        <Driver :driverData="element.item" :showMenu="true"></Driver>
       </li>
     </template>
   </draggable>
-  <div v-if="showControls" class="row">
-    <button class="btn btn-secondary button col-4" @click="reset">
-      Reset
-    </button>
-    <button class="btn btn-secondary button col-4" @click="reverse">
-      Reverse
-    </button>
-    <a id="download" download="entrylist.json" class="btn btn-secondary button col-4" @mousedown="download">
-      <i class="fa fa-download" aria-hidden="true"></i> Download
-    </a>
-  </div>
 </template>
 
 <script>
@@ -43,7 +32,6 @@
     },
     props: {
         initialList: Object,
-        showControls: Boolean,
         disableDragging: Boolean
     },
     data() {
@@ -95,15 +83,22 @@
     min-height: 20px;
   }
 
+  .list-group-item:nth-child(2n) {
+    margin-left: 33%;
+  }
+
   .list-group-item {
     background: rgba(0, 0, 0, 0.5)!important;
-    cursor: move;
     color: white!important;
     outline: 2px ridge white;
     outline-offset: -0.25em;
+    width: 66%;
+    margin-bottom: 5%;
+    display: flex;
+    align-items: center;
   }
   
-  .sortable-chosen{
+  .sortable-chosen, .menu-active{
     background: rgba(255, 0, 0, 0.5)!important;
   }
 
@@ -113,5 +108,11 @@
 
   .no-move {
     transition: transform 0s;
+  }
+</style>
+
+<style scoped>
+  .list-group-item {
+    cursor: move;
   }
 </style>

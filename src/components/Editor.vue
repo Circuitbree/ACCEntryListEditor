@@ -48,6 +48,10 @@
     margin-bottom: 1%;
   }
 
+  .controls {
+    margin-top: 1%;
+  }
+
   .controls .btn {
     margin: 0 1%;
     width: 30%;

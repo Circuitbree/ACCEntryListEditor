@@ -15,7 +15,7 @@
   >
     <template #item="{ element }">
       <li class="list-group-item">
-        <Driver :driverData="element.item" :showMenu="true"></Driver>
+        <Driver :driverData="element.item" :showMenu="true" @update-ballastkg="$value => { element.item['ballastkg'] = parseInt($value) }" @update-restrictor="$value => { element.item['restrictor'] = parseInt($value) }"></Driver>
       </li>
     </template>
   </draggable>
@@ -56,7 +56,29 @@
           car['defaultGridPosition'] = list['entries'].indexOf(car) + 1;
         }
 
-        document.getElementById('download').setAttribute('href', "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(list)))
+        document.getElementById('download').setAttribute('href', this.getUTF16Download(list))
+      },
+      getUTF16Download(data) {
+        var str = JSON.stringify(data);
+
+        // ref: https://stackoverflow.com/q/6226189
+        var charCode, byteArray = [];
+
+        // LE BOM
+        byteArray.push(255, 254);
+
+        for (var i = 0; i < str.length; ++i) {
+
+          charCode = str.charCodeAt(i);
+        
+          // LE Bytes
+          byteArray.push(charCode & 0xff);
+          byteArray.push(charCode / 256 >>> 0);
+        }
+        
+        var blob = new Blob([new Uint8Array(byteArray)], {type:'text/plain;charset=UTF-16LE;'});
+
+        return URL.createObjectURL(blob)
       },
       getInitialList() {
         return this.initialList['entries'].slice().map((item, index) => {
@@ -83,17 +105,13 @@
     min-height: 20px;
   }
 
-  .list-group-item:nth-child(2n) {
-    margin-left: 45%;
-  }
-
   .list-group-item {
     background: rgba(0, 0, 0, 0.5)!important;
     color: white!important;
     outline: 2px ridge white;
     outline-offset: -0.25em;
     width: 35%;
-    margin-bottom: 5%;
+    margin-bottom: 1%;
     margin-left: 20%;
     display: flex;
     align-items: center;
@@ -115,5 +133,9 @@
 <style scoped>
   .list-group-item {
     cursor: move;
+  }
+
+  .list-group-item:nth-child(2n) {
+    margin-left: 45%;
   }
 </style>

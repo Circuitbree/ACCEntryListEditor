@@ -16,10 +16,13 @@ export default {
 <style>
 
 html, body {
-    height: 100%;
+  height: 100%;
 }
 body {
-    margin: 0;
+  margin: 0;
+  background-image: url('~@/assets/background.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 #app {

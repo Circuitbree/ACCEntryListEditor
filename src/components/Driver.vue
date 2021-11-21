@@ -4,12 +4,42 @@
         #{{driverData["raceNumber"]}}
         <i class="fas fa-chevron-down pointer right" @click="dropdown($event)"></i>
         <div class="content">
-          <ul class="car-drivers">
-            <li v-for="driver in driverData['drivers']" :key="driver" class="car-driver">
-              <i :class="'fas fa-medal category-' + driver['driverCategory']"></i>
-              {{driver['firstName']}} "{{driver['nickName']}}" {{driver['lastName']}}
-            </li>
-          </ul>
+          <div class="wrapper">
+            <div>
+              <b>Drivers: </b>
+              <ul class="car-drivers">
+                <li v-for="driver in driverData['drivers']" :key="driver" class="car-driver">
+                  <i :class="'fas fa-medal category-' + driver['driverCategory']"></i>
+                  {{driver['firstName']}} "{{driver['nickName']}}" {{driver['lastName']}}
+                </li>
+              </ul>
+            </div>
+            <b>Car Information: </b>
+            <div class="info-tooltip row">
+              <div class="col-3"><i class="fas fa-weight-hanging"></i></div>
+              <div v-if="!showMenu" class="col-6">{{driverData['ballastkg'] ?? 0}}</div>
+              <div v-else class="col-6">
+                <input @change="changeBallast($event)" type="number" min="0" max="100" step="1" :value="driverData['ballastkg'] ?? 0" />
+              </div>
+              <div class="col-3">Kg</div>
+              <span class="tooltip-text">Ballast</span>
+            </div>
+            <div class="info-tooltip row">
+              <div class="col-3"><i class="fas fa-car-battery"></i></div>
+              <div v-if="!showMenu" class="col-6">{{driverData['restrictor'] ?? 0}}</div>
+              <div v-else class="col-6">
+                <input @change="changeRestrictor($event)" type="number" min="0" max="100" step="1" :value="driverData['restrictor'] ?? 0" />
+              </div>
+              <div class="col-3">%</div>
+              <span class="tooltip-text">Restrictor</span>
+            </div>
+            <div class="row">
+              <div class="col-3"><i class="fas fa-car"></i></div>
+              <div v-if="showMenu" :class="'col-9 car-selection-' + driverData['forcedCarModel']"></div>
+              <div v-else-if="driverData['forcedCarModel'] != -1" :class="'col-9 car-selection-' + driverData['forcedCarModel']"></div>
+              <div v-else class="col-9">No car forced!</div>
+            </div>
+          </div>
         </div>
     </div>
 </template>
@@ -39,6 +69,12 @@
           var wrapper = content.children[0];
           content.style.height = wrapper.clientHeight + "px";
         }
+      },
+      changeBallast(event) {
+        this.$emit('update-ballastkg', event.target.value);
+      },
+      changeRestrictor(event) {
+        this.$emit('update-restrictor', event.target.value);
       }
     }
   }
@@ -86,5 +122,23 @@
 
     .car-drivers {
       padding: 0;
+    }
+
+    .info-tooltip .tooltip-text {
+      visibility: hidden;
+      width: 90px;
+      background-color: black;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      margin-left: 85%;
+
+      /* Position the tooltip */
+      position: absolute;
+      z-index: 1;
+    }
+
+    .info-tooltip:hover .tooltip-text {
+      visibility: visible;
     }
 </style>

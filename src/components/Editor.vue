@@ -16,7 +16,7 @@
     <div class="col-6">
       <h3>Original Order</h3>
       <ul class="list-group">
-        <li class="list-group-item" v-for="element in qResults['entries']" :key="element">
+        <li class="list-group-item" v-for="element in originalList" :key="element">
           <Driver :driverData="element" :showMenu="false"></Driver>
         </li>
       </ul>
@@ -38,7 +38,9 @@
         qResults: Object
     },
     data() {
-      return {}
+      return {
+        originalList: JSON.parse(JSON.stringify(this.qResults['entries']))
+      }
     },
   }
 </script>

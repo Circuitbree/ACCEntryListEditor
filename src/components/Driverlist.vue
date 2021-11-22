@@ -15,7 +15,7 @@
   >
     <template #item="{ element }">
       <li class="list-group-item">
-        <Driver :driverData="element.item" :showMenu="true" @update-ballastkg="$value => { element.item['ballastkg'] = parseInt($value) }" @update-restrictor="$value => { element.item['restrictor'] = parseInt($value) }"></Driver>
+        <Driver :driverData="element.item" :showMenu="true" @update-ballastkg="$value => { element.item['ballastkg'] = parseInt($value) }" @update-restrictor="$value => { element.item['restrictor'] = parseInt($value) }" @update-car="$value => { element.item['forcedCarModel'] = parseInt($value) }"></Driver>
       </li>
     </template>
   </draggable>

@@ -19,7 +19,7 @@
               <div class="col-3"><i class="fas fa-weight-hanging"></i></div>
               <div v-if="!showMenu" class="col-6">{{driverData['ballastkg'] ?? 0}}</div>
               <div v-else class="col-6">
-                <input @change="changeBallast($event)" type="number" min="0" max="100" step="1" :value="driverData['ballastkg'] ?? 0" />
+                <input class="car-info-select" @change="changeBallast($event)" type="number" min="0" max="100" step="1" :value="driverData['ballastkg'] ?? 0" />
               </div>
               <div class="col-3">Kg</div>
               <span class="tooltip-text">Ballast</span>
@@ -28,14 +28,18 @@
               <div class="col-3"><i class="fas fa-car-battery"></i></div>
               <div v-if="!showMenu" class="col-6">{{driverData['restrictor'] ?? 0}}</div>
               <div v-else class="col-6">
-                <input @change="changeRestrictor($event)" type="number" min="0" max="100" step="1" :value="driverData['restrictor'] ?? 0" />
+                <input class="car-info-select" @change="changeRestrictor($event)" type="number" min="0" max="100" step="1" :value="driverData['restrictor'] ?? 0" />
               </div>
               <div class="col-3">%</div>
               <span class="tooltip-text">Restrictor</span>
             </div>
             <div class="row">
               <div class="col-3"><i class="fas fa-car"></i></div>
-              <div v-if="showMenu" :class="'col-9 car-selection-' + driverData['forcedCarModel']"></div>
+              <div v-if="showMenu" :class="'col-6 car-selection-' + driverData['forcedCarModel']">
+                <select class="car-info-select" @input="changeCar($event)">
+                  <option v-for="element in carList" :key="element" :value="element.key">{{element.value}}</option>
+                </select>
+              </div>
               <div v-else-if="driverData['forcedCarModel'] != -1" :class="'col-9 car-selection-' + driverData['forcedCarModel']"></div>
               <div v-else class="col-9">No car forced!</div>
             </div>
@@ -45,14 +49,168 @@
 </template>
 
 <script>
-  
   export default {
     props: {
         driverData: Object,
         showMenu: Boolean
     },
     data() {
-      return {}
+      return {
+        carList: [
+          {
+            key: "-1",
+            value: "Do not force a specific car."
+          },
+          {
+            key: "0",
+            value: "2018 Porsche 991 GT3 R"
+          },
+          {
+            key: "1",
+            value: "2015 Mercedes-AMG GT3"
+          },
+          {
+            key: "2",
+            value: "2018 Ferrari 488 GT3"
+          },
+          {
+            key: "3",
+            value: "2015 Audi R8 LMS"
+          },
+          {
+            key: "4",
+            value: "2015 Lamborghini Huracan GT3"
+          },
+          {
+            key: "5",
+            value: "2015 McLaren 650S GT3"
+          },
+          {
+            key: "6",
+            value: "2018 Nissan GT-R Nismo GT3"
+          },
+          {
+            key: "7",
+            value: "2017 BMW M6 GT3"
+          },
+          {
+            key: "8",
+            value: "2018 Bentley Continental GT3"
+          },
+          {
+            key: "9",
+            value: "2017 Porsche 991 II GT3 Cup"
+          },
+          {
+            key: "10",
+            value: "2015 Nissan GT-R Nismo GT3"
+          },
+          {
+            key: "11",
+            value: "2015 Bentley Continental GT3"
+          },
+          {
+            key: "12",
+            value: "2013 AMR V12 Vantage GT3"
+          },
+          {
+            key: "13",
+            value: "2017 Reiter Engineering R-EX GT3"
+          },
+          {
+            key: "14",
+            value: "2012 Emil Frey Jaguar G3"
+          },
+          {
+            key: "15",
+            value: "2016 Lexus RC F GT3"
+          },
+          {
+            key: "16",
+            value: "2019 Lamborghini Huracan GT3 Evo"
+          },
+          {
+            key: "17",
+            value: "2017 Honda NSX GT3"
+          },
+          {
+            key: "18",
+            value: "2015 Lamborghini Huracan SuperTrofeo"
+          },
+          {
+            key: "19",
+            value: "2019 Audi R8 LMS Evo"
+          },
+          {
+            key: "20",
+            value: "2019 AMR V8 Vantage"
+          },
+          {
+            key: "21",
+            value: "2019 Honda NSX GT3 Evo"
+          },
+          {
+            key: "22",
+            value: "2019 McLaren 720S GT3"
+          },
+          {
+            key: "23",
+            value: "2019 Porsche 911 II GT3 R"
+          },
+          {
+            key: "24",
+            value: "2020 Ferrari 488 GT3 Evo"
+          },
+          {
+            key: "25",
+            value: "2020 Mercedes-AMG GT3"
+          },
+          {
+            key: "50",
+            value: "2018 Alpine A110 GT4"
+          },
+          {
+            key: "51",
+            value: "2018 Aston Martin Vantage GT4"
+          },
+          {
+            key: "52",
+            value: "2018 Audi R8 LMS GT4"
+          },
+          {
+            key: "53",
+            value: "2018 BMW M4 GT4"
+          },
+          {
+            key: "55",
+            value: "2017 Chevrolet Camaro GT4"
+          },
+          {
+            key: "56",
+            value: "2012 Ginetta G55 GT4"
+          },
+          {
+            key: "57",
+            value: "2016 KTM X-Bow GT4"
+          },
+          {
+            key: "58",
+            value: "2016 Maserati MC GT4"
+          },
+          {
+            key: "59",
+            value: "2016 McLaren 570S GT4"
+          },
+          {
+            key: "60",
+            value: "2016 Mercedes AMG GT4"
+          },
+          {
+            key: "61",
+            value: "2019 Porsche 718 Cayman GT4 Clubsport"
+          }
+        ]
+      }
     },
     methods: {
       dropdown(event) {
@@ -75,6 +233,9 @@
       },
       changeRestrictor(event) {
         this.$emit('update-restrictor', event.target.value);
+      },
+      changeCar(event) {
+        this.$emit('update-car', event.target.value);
       }
     }
   }
@@ -122,6 +283,10 @@
 
     .car-drivers {
       padding: 0;
+    }
+
+    .car-info-select {
+      width: 120%;
     }
 
     .info-tooltip .tooltip-text {

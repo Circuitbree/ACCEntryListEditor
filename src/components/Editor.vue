@@ -8,7 +8,7 @@
         Reverse
       </button>
       <a id="download" download="entrylist.json" class="btn btn-secondary button" @mousedown="$refs.editList.download()">
-        <i class="fa fa-download" aria-hidden="true"></i> Download
+        Download <i class="fa fa-download" aria-hidden="true"></i>
       </a>
     </div>
   </div>
@@ -52,6 +52,26 @@
 
   .controls {
     margin-top: 1%;
+  }
+
+  .controls .btn {
+    cursor: pointer;
+    border: 0;
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    outline: 2px ridge white;
+    outline-offset: -0.35em;
+  }
+
+  .controls .btn:hover {
+    background: white;
+    color: black;
+    outline-color: lightskyblue;
+  }
+
+  .controls .btn:hover i {
+    color: lightskyblue;
   }
 
   .controls .btn {

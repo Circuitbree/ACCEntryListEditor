@@ -33,14 +33,14 @@
               <div class="col-3">%</div>
               <span class="tooltip-text">Restrictor</span>
             </div>
-            <div class="row">
+            <div :class="'row car-selection-' + driverData['forcedCarModel']">
               <div class="col-3"><i class="fas fa-car"></i></div>
-              <div v-if="showMenu" :class="'col-6 car-selection-' + driverData['forcedCarModel']">
+              <div v-if="showMenu" class='col-6'>
                 <select class="car-info-select" @input="changeCar($event)">
-                  <option v-for="element in carList" :key="element" :value="element.key">{{element.value}}</option>
+                  <option v-for="element in carList" :key="element" :value="element.key" :selected="element.key == driverData['forcedCarModel'] ? true : null">{{element.value}}</option>
                 </select>
               </div>
-              <div v-else-if="driverData['forcedCarModel'] != -1" :class="'col-9 car-selection-' + driverData['forcedCarModel']"></div>
+              <div v-else-if="driverData['forcedCarModel'] != -1" class='col-9'>{{getCarStr(driverData['forcedCarModel'])}}</div>
               <div v-else class="col-9">No car forced!</div>
             </div>
           </div>
@@ -236,6 +236,13 @@
       },
       changeCar(event) {
         this.$emit('update-car', event.target.value);
+      },
+      getCarStr(key) {
+        for(var obj of this.carList) {
+          if(obj.key == key) {
+            return obj.value;
+          }
+        }
       }
     }
   }
@@ -306,4 +313,27 @@
     .info-tooltip:hover .tooltip-text {
       visibility: visible;
     }
+
+    .car-selection-9 i {
+      color: green;
+    }
+
+    .car-selection-18 i {
+      color: yellow;
+    }
+
+    .car-selection-50 i,
+    .car-selection-51 i,
+    .car-selection-52 i,
+    .car-selection-53 i,
+    .car-selection-55 i,
+    .car-selection-56 i,
+    .car-selection-57 i,
+    .car-selection-58 i,
+    .car-selection-59 i,
+    .car-selection-60 i,
+    .car-selection-61 i
+    {
+        color: blue;
+    } 
 </style>

@@ -43,6 +43,11 @@
               <div v-else-if="driverData['forcedCarModel'] != -1" class='col-9'>{{getCarStr(driverData['forcedCarModel'])}}</div>
               <div v-else class="col-9">No car forced!</div>
             </div>
+            <div class="row">
+              <div class="col-3"><i class="fas fa-user-shield"></i></div>
+              <div v-if="!showMenu" class="col-9">{{driverData['isServerAdmin'] ? "Car has admin privileges." : "Car is not an admin."}}</div>
+              <div v-else class="col-9"><input type="checkbox" @click="changeAdmin($event)" :checked="driverData['isServerAdmin'] ? true : null"/> Server Admin</div>
+            </div>
           </div>
         </div>
     </div>
@@ -243,6 +248,9 @@
             return obj.value;
           }
         }
+      },
+      changeAdmin(event) {
+        this.$emit('update-admin', event.target.value);
       }
     }
   }

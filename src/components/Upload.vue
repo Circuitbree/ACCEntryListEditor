@@ -50,6 +50,9 @@
           this.driverList = this.parsedResults;
           this.FILE_ERROR = false;
           this.FILE_UPLOADED = !this.FILE_UPLOADED;
+
+          // sort list by defaultGridPosition to load correct order insted of join order
+          this.driverList['entries'].sort((a, b) => (a.defaultGridPosition > b.defaultGridPosition) ? 1 : ((b.defaultGridPosition > a.defaultGridPosition) ? -1 : 0))
         }
       },
       checkParsedData() {

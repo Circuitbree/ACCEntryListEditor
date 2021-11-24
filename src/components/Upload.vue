@@ -4,7 +4,7 @@
       <form enctype="multipart/form-data" novalidate v-if="!FILE_UPLOADED">
         <div class="dropbox offset-3 col-6">
           <p class="info">
-            Upload Entrylist <i class="fa fa-upload" aria-hidden="true"></i>
+            Upload Entrylist or Race Results <i class="fa fa-upload" aria-hidden="true"></i>
           </p>
           <input type="file" @change="handleUpload($event)" accept=".json,application/json" class="input-file" title=" ">
         </div>
@@ -15,6 +15,13 @@
         </p>
       </div>
       <div v-if="FILE_UPLOADED">
+        <div class="row"> 
+          <div class="col-12">
+            <button class="btn btn-secondary button" @click="resetEditor()">
+              Edit another Entrylist <i class="fas fa-edit"></i>
+            </button>
+          </div>
+        </div>
         <Editor :qResults="driverList" />
       </div>
     </div>
@@ -28,7 +35,18 @@
       Editor
     },
     data() {
-      return {FILE_UPLOADED:false, FILE_ERROR:false, parsedResults:null, driverList:[]}
+      return {
+          FILE_UPLOADED:false, 
+          FILE_ERROR:false, 
+          TYPE_ENTRYLIST: 'Entry',
+          TYPE_RESULTS: 'Results',
+          FILE_ENCODING: 'UTF-16LE',
+          ENTRIES_STR: 'entries',
+          SESSION_RES_STR: 'sessionResult',
+          LEADERBOARD_STR: 'leaderBoardLines',
+          parsedResults:null, 
+          driverList:[]
+        }
     },
     methods: {
       handleUpload(event) {
@@ -36,33 +54,104 @@
         reader.addEventListener("load", () => {
           this.parseJson(reader.result);
         }, false);
-        reader.readAsText(event.target.files[0], 'UTF-16LE');
+        reader.readAsText(event.target.files[0], this.FILE_ENCODING);
       },
       parseJson(data) {
         this.parsedResults = JSON.parse(data);
 
-        var error = this.checkParsedData();
+        var parseRes = this.checkParsedData();
 
-        if(error) {
+        if(parseRes.error) {
           this.FILE_ERROR = true;
            this.driverList = [];
         } else {
-          this.driverList = this.parsedResults;
           this.FILE_ERROR = false;
           this.FILE_UPLOADED = !this.FILE_UPLOADED;
 
-          // sort list by defaultGridPosition to load correct order insted of join order
-          this.driverList['entries'].sort((a, b) => (a.defaultGridPosition > b.defaultGridPosition) ? 1 : ((b.defaultGridPosition > a.defaultGridPosition) ? -1 : 0))
+          if(parseRes.type == this.TYPE_ENTRYLIST) {
+            this.driverList = this.parsedResults;
+
+            // sort list by defaultGridPosition to load correct order insted of join order
+            this.driverList[this.ENTRIES_STR].sort((a, b) => (a.defaultGridPosition > b.defaultGridPosition) ? 1 : ((b.defaultGridPosition > a.defaultGridPosition) ? -1 : 0))
+          } else if(parseRes.type == this.TYPE_RESULTS) {
+            // got a results file, init an empty entrylist
+            this.driverList = {entries: [], configVersion: 1, forceEntryList: 0};
+
+            // fill in drivers and positions from results file
+            var leaderboard = this.parsedResults[this.SESSION_RES_STR][this.LEADERBOARD_STR];
+            for(var i = 0; i < leaderboard.length; i++) {
+              var car = leaderboard[i];
+              this.driverList.entries.push({
+                drivers: car.car.drivers,
+                customCar: "",
+                raceNumber: car.car.raceNumber,
+                defaultGridPosition: i + 1,
+                forcedCarModel: car.carModel,
+                overrideDriverInfo: 0,
+                isServerAdmin: 0,
+                overrideCarModelForCustomCar: 1,
+                configVersion: 1
+              });
+            }
+          }
         }
       },
       checkParsedData() {
-        return this.parsedResults['entries'] == null || this.parsedResults['entries'].length <= 0;
+        var res = {
+          error: null, 
+          type: ''
+        }
+
+        if(this.parsedResults.length <= 0 || (!this.parsedResults[this.ENTRIES_STR] && !this.parsedResults[this.SESSION_RES_STR])) {
+          res.error = true;
+          return res;
+        }
+
+        res.error = false;
+
+        if(this.parsedResults[this.ENTRIES_STR]) {
+          res.type = this.TYPE_ENTRYLIST;
+          return res;
+        }
+
+        if(this.parsedResults[this.SESSION_RES_STR]) {
+          res.type = this.TYPE_RESULTS;
+          return res;
+        }
+      },
+      resetEditor() {
+        this.FILE_UPLOADED = false
+        this.FILE_ERROR = false
+        this.parsedResults = null 
+        this.driverList = []
       }
     }
   }
 </script>
 
 <style scoped>
+  .btn {
+    margin: 0 3%;
+    cursor: pointer;
+    border: 0;
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    outline: 2px ridge white;
+    outline-offset: -0.35em;
+    width: 94%;
+  }
+
+  .btn:hover {
+    background: white;
+    color: black;
+    outline-color: lightskyblue;
+  }
+
+  .btn:hover i {
+    color: lightskyblue;
+  }
+
   .upload {
     display: flex;
     align-items: center;

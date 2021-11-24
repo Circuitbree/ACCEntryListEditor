@@ -250,6 +250,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+    .driver-container {
+      width: 100%;
+    }
+    
     .left {
       float: left;
     }

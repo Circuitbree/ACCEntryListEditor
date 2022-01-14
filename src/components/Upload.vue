@@ -68,6 +68,8 @@
           this.FILE_ERROR = false;
           this.FILE_UPLOADED = !this.FILE_UPLOADED;
 
+
+          // TODO forcecarmodel=-1 needs to be included at all times
           if(parseRes.type == this.TYPE_ENTRYLIST) {
             this.driverList = this.parsedResults;
 
@@ -78,6 +80,9 @@
             this.driverList = {entries: [], configVersion: 1, forceEntryList: 0};
 
             // fill in drivers and positions from results file
+
+            // TODO check how to mark drivers with no laps 
+            // maybe also display laps if needed 
             var leaderboard = this.parsedResults[this.SESSION_RES_STR][this.LEADERBOARD_STR];
             for(var i = 0; i < leaderboard.length; i++) {
               var car = leaderboard[i];

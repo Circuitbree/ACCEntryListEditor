@@ -30,6 +30,8 @@
   import draggable from 'vuedraggable'
   import Driver from './Driver.vue'
 
+  // TODO add option to remove entries
+  
   export default {
     components: {
       draggable,

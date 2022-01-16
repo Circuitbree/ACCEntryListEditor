@@ -68,8 +68,6 @@
           this.FILE_ERROR = false;
           this.FILE_UPLOADED = !this.FILE_UPLOADED;
 
-
-          // TODO forcecarmodel=-1 needs to be included at all times
           if(parseRes.type == this.TYPE_ENTRYLIST) {
             this.driverList = this.parsedResults;
 
@@ -98,6 +96,13 @@
                 configVersion: 1
               });
             }
+          }
+
+          // fix for 1.8 include forcecarmodel if not already present
+
+          for(var j = 0; j < this.driverList.entries.length; j++) {
+            if(!this.driverList.entries[j].forcedCarModel)
+              this.driverList.entries[j].forcedCarModel = -1
           }
         }
       },

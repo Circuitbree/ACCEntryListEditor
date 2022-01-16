@@ -19,7 +19,8 @@
           @update-ballastkg="$value => { element.item['ballastkg'] = parseInt($value) }" 
           @update-restrictor="$value => { element.item['restrictor'] = parseInt($value) }" 
           @update-car="$value => { element.item['forcedCarModel'] = parseInt($value) }"
-          @update-admin="$value => { element.item['isServerAdmin'] = $value ? 1 : 0}">
+          @update-admin="$value => { element.item['isServerAdmin'] = $value ? 1 : 0}"
+          @remove="$value => { driverList.splice(driverList.map((item) => item['item']).indexOf($value), 1); print(driverList.map((item) => item['item']).indexOf($value)) }">
         </Driver>
       </li>
     </template>
@@ -29,8 +30,6 @@
 <script>
   import draggable from 'vuedraggable'
   import Driver from './Driver.vue'
-
-  // TODO add option to remove entries
   
   export default {
     components: {
@@ -48,6 +47,9 @@
       }
     },
     methods: {
+      print(val) {
+        console.log(val)
+      },
       reset() {
         this.driverList = this.getInitialList();
       },

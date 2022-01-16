@@ -1,55 +1,55 @@
 <template>
     <div class="driver-container">
-        <i v-if="showMenu" class="fas fa-bars left"></i>
-        #{{driverData["raceNumber"]}}
-        <i class="fas fa-chevron-down pointer right" @click="dropdown($event)"></i>
-        <div class="content">
-          <div class="wrapper">
-            <div>
-              <b>Drivers: </b>
-              <ul class="car-drivers">
-                <li v-for="driver in driverData['drivers']" :key="driver" class="car-driver">
-                  <i :class="'fas fa-medal category-' + driver['driverCategory']"></i>
-                  {{driver['firstName']}} "{{driver['nickName']}}" {{driver['lastName']}}
-                </li>
-              </ul>
+      <i class="fas fa-chevron-down pointer left" @click="dropdown($event)"></i>
+      #{{driverData["raceNumber"]}}
+      <i v-if="showMenu" class="far fa-times-circle pointer right" @click="removeEntry()"></i>
+      <div class="content">
+        <div class="wrapper">
+          <div>
+            <b>Drivers: </b>
+            <ul class="car-drivers">
+              <li v-for="driver in driverData['drivers']" :key="driver" class="car-driver">
+                <i :class="'fas fa-medal category-' + driver['driverCategory']"></i>
+                {{driver['firstName']}} "{{driver['nickName']}}" {{driver['lastName']}}
+              </li>
+            </ul>
+          </div>
+          <b>Car Information: </b>
+          <div class="info-tooltip row">
+            <div class="col-3"><i class="fas fa-weight-hanging"></i></div>
+            <div v-if="!showMenu" class="col-6">{{driverData['ballastkg'] ?? 0}}</div>
+            <div v-else class="col-6">
+              <input class="car-info-select" @change="changeBallast($event)" type="number" min="0" max="100" step="1" :value="driverData['ballastkg'] ?? 0" />
             </div>
-            <b>Car Information: </b>
-            <div class="info-tooltip row">
-              <div class="col-3"><i class="fas fa-weight-hanging"></i></div>
-              <div v-if="!showMenu" class="col-6">{{driverData['ballastkg'] ?? 0}}</div>
-              <div v-else class="col-6">
-                <input class="car-info-select" @change="changeBallast($event)" type="number" min="0" max="100" step="1" :value="driverData['ballastkg'] ?? 0" />
-              </div>
-              <div class="col-3">Kg</div>
-              <span class="tooltip-text">Ballast</span>
+            <div class="col-3">Kg</div>
+            <span class="tooltip-text">Ballast</span>
+          </div>
+          <div class="info-tooltip row">
+            <div class="col-3"><i class="fas fa-car-battery"></i></div>
+            <div v-if="!showMenu" class="col-6">{{driverData['restrictor'] ?? 0}}</div>
+            <div v-else class="col-6">
+              <input class="car-info-select" @change="changeRestrictor($event)" type="number" min="0" max="100" step="1" :value="driverData['restrictor'] ?? 0" />
             </div>
-            <div class="info-tooltip row">
-              <div class="col-3"><i class="fas fa-car-battery"></i></div>
-              <div v-if="!showMenu" class="col-6">{{driverData['restrictor'] ?? 0}}</div>
-              <div v-else class="col-6">
-                <input class="car-info-select" @change="changeRestrictor($event)" type="number" min="0" max="100" step="1" :value="driverData['restrictor'] ?? 0" />
-              </div>
-              <div class="col-3">%</div>
-              <span class="tooltip-text">Restrictor</span>
+            <div class="col-3">%</div>
+            <span class="tooltip-text">Restrictor</span>
+          </div>
+          <div :class="'row car-selection-' + driverData['forcedCarModel']">
+            <div class="col-3"><i class="fas fa-car"></i></div>
+            <div v-if="showMenu" class='col-6'>
+              <select class="car-info-select" @input="changeCar($event)">
+                <option v-for="element in carList" :key="element" :value="element.key" :selected="element.key == driverData['forcedCarModel'] ? true : null">{{element.value}}</option>
+              </select>
             </div>
-            <div :class="'row car-selection-' + driverData['forcedCarModel']">
-              <div class="col-3"><i class="fas fa-car"></i></div>
-              <div v-if="showMenu" class='col-6'>
-                <select class="car-info-select" @input="changeCar($event)">
-                  <option v-for="element in carList" :key="element" :value="element.key" :selected="element.key == driverData['forcedCarModel'] ? true : null">{{element.value}}</option>
-                </select>
-              </div>
-              <div v-else-if="driverData['forcedCarModel'] != -1" class='col-9'>{{getCarStr(driverData['forcedCarModel'])}}</div>
-              <div v-else class="col-9">No car forced!</div>
-            </div>
-            <div class="row">
-              <div class="col-3"><i class="fas fa-user-shield"></i></div>
-              <div v-if="!showMenu" class="col-9">{{driverData['isServerAdmin'] ? "Car has admin privileges." : "Car is not an admin."}}</div>
-              <div v-else class="col-9"><input type="checkbox" @click="changeAdmin($event)" :checked="driverData['isServerAdmin'] ? true : null"/> Server Admin</div>
-            </div>
+            <div v-else-if="driverData['forcedCarModel'] != -1" class='col-9'>{{getCarStr(driverData['forcedCarModel'])}}</div>
+            <div v-else class="col-9">No car forced!</div>
+          </div>
+          <div class="row">
+            <div class="col-3"><i class="fas fa-user-shield"></i></div>
+            <div v-if="!showMenu" class="col-9">{{driverData['isServerAdmin'] ? "Car has admin privileges." : "Car is not an admin."}}</div>
+            <div v-else class="col-9"><input type="checkbox" @click="changeAdmin($event)" :checked="driverData['isServerAdmin'] ? true : null"/> Server Admin</div>
           </div>
         </div>
+      </div>
     </div>
 </template>
 
@@ -225,13 +225,16 @@
         event.target.classList.toggle("fa-chevron-up");
         event.target.classList.toggle("fa-chevron-down");
 
-        var content = event.target.nextSibling;
+        var content = event.target.parentNode.getElementsByClassName("content")[0];
         if (content.clientHeight) {
           content.style.height = 0;
         } else {
           var wrapper = content.children[0];
           content.style.height = wrapper.clientHeight + "px";
         }
+      },
+      removeEntry() {
+        this.$emit('remove', this.driverData);
       },
       changeBallast(event) {
         this.$emit('update-ballastkg', event.target.value);

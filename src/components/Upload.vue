@@ -78,14 +78,11 @@
             this.driverList = {entries: [], configVersion: 1, forceEntryList: 0};
 
             // fill in drivers and positions from results file
-
-            // TODO check how to mark drivers with no laps 
-            // maybe also display laps if needed 
             var leaderboard = this.parsedResults[this.SESSION_RES_STR][this.LEADERBOARD_STR];
             for(var i = 0; i < leaderboard.length; i++) {
               var car = leaderboard[i];
               this.driverList.entries.push({
-                drivers: car.car.drivers,
+                drivers: [],
                 customCar: "",
                 raceNumber: car.car.raceNumber,
                 defaultGridPosition: i + 1,
@@ -93,8 +90,14 @@
                 overrideDriverInfo: 0,
                 isServerAdmin: 0,
                 overrideCarModelForCustomCar: 1,
-                configVersion: 1
+                configVersion: 1,
+                laps: car.timing.lapCount
               });
+
+              for(var driver_i = 0; driver_i < car.car.drivers.length; driver_i++)
+              {
+                this.driverList.entries[i].drivers.push({"playerID": car.car.drivers[driver_i].playerId});
+              }
             }
           }
 

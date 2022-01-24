@@ -49,6 +49,10 @@
             <div v-if="!showMenu" class="col-9">{{driverData['isServerAdmin'] ? "Car has admin privileges." : "Car is not an admin."}}</div>
             <div v-else class="col-9"><input type="checkbox" @click="changeAdmin($event)" :checked="driverData['isServerAdmin'] ? true : null"/> Server Admin</div>
           </div>
+          <div v-if="driverData['laps'] > 0" class="row">
+            <div class="col-3"><i class="fas fa-road"></i></div>
+            <div class="col-9">Car has completed {{driverData['laps']}} laps.</div>
+          </div>
           <div v-if="driverData['laps'] <= 0" class="row errors">
             <div class="col-3"><i class="fas fa-exclamation-triangle"></i></div>
             <div class="col-9">This car has not completed any laps!</div>

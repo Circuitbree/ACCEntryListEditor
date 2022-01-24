@@ -15,12 +15,12 @@
   >
     <template #item="{ element }">
       <li class="list-group-item">
-        <Driver :driverData="element.item" :showMenu="true" 
+        <Driver :driverData="element.item" :showMenu="true" :duplicateId="check(element.item)"
           @update-ballastkg="$value => { element.item['ballastkg'] = parseInt($value) }" 
           @update-restrictor="$value => { element.item['restrictor'] = parseInt($value) }" 
           @update-car="$value => { element.item['forcedCarModel'] = parseInt($value) }"
           @update-admin="$value => { element.item['isServerAdmin'] = $value ? 1 : 0}"
-          @remove="$value => { driverList.splice(driverList.map((item) => item['item']).indexOf($value), 1); print(driverList.map((item) => item['item']).indexOf($value)) }">
+          @remove="$value => { driverList.splice(driverList.map((item) => item['item']).indexOf($value), 1) }">
         </Driver>
       </li>
     </template>
@@ -40,6 +40,7 @@
         initialList: Object,
         disableDragging: Boolean
     },
+    
     data() {
       return {
         driverList: this.getInitialList(),
@@ -47,9 +48,6 @@
       }
     },
     methods: {
-      print(val) {
-        console.log(val)
-      },
       reset() {
         this.driverList = this.getInitialList();
       },
@@ -63,6 +61,11 @@
         
         for(var car of list['entries']) {
           car['defaultGridPosition'] = list['entries'].indexOf(car) + 1;
+
+          if(car.laps)
+          {
+            delete car.laps;
+          }
         }
 
         document.getElementById('download').setAttribute('href', this.getUTF16Download(list))
@@ -94,6 +97,22 @@
             return { item, order: index + 1 }; 
           }
         )
+      },
+      check: function(item) {
+        
+        for(var driver in item.drivers) {
+          for(var car in this.driverList) {
+            if(item == this.driverList[car].item)
+              continue;
+            for(var check in this.driverList[car].item.drivers) {
+              if(item.drivers[driver].playerID === this.driverList[car].item.drivers[check].playerID) {
+                return true;
+              }
+            }
+          }
+        }
+
+        return false;
       }
     },
     computed: {

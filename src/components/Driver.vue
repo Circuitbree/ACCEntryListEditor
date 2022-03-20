@@ -185,6 +185,10 @@
             value: "2020 Mercedes-AMG GT3"
           },
           {
+            key: "30",
+            value: "2022 BMW M4 GT3"
+          },
+          {
             key: "50",
             value: "2018 Alpine A110 GT4"
           },

@@ -36,16 +36,18 @@
     },
     data() {
       return {
-          FILE_UPLOADED:false, 
-          FILE_ERROR:false, 
+          FILE_UPLOADED: false, 
+          FILE_ERROR: false, 
           TYPE_ENTRYLIST: 'Entry',
           TYPE_RESULTS: 'Results',
           FILE_ENCODING: 'UTF-16LE',
           ENTRIES_STR: 'entries',
           SESSION_RES_STR: 'sessionResult',
           LEADERBOARD_STR: 'leaderBoardLines',
-          parsedResults:null, 
-          driverList:[]
+          SESSION_TYPE_STR: 'type',
+          SESSION_TYPE_RACE: 1,
+          parsedResults: null, 
+          driverList: []
         }
     },
     methods: {
@@ -91,21 +93,23 @@
                 isServerAdmin: 0,
                 overrideCarModelForCustomCar: 1,
                 configVersion: 1,
-                laps: car.timing.lapCount
+                laps: car.timing.lapCount,
+                teamName: car.teamName,
+                qualyTime: this.parsedResults[this.SESSION_RES_STR][this.SESSION_TYPE_STR] == this.SESSION_TYPE_RACE ? null : car.timing.bestLap,
+                // first entry is leader, lap count of leader is maximum laps driven in race
+                raceTotalLaps: leaderboard[0].timing.lapCount
               });
 
               for(var driver_i = 0; driver_i < car.car.drivers.length; driver_i++)
               {
-                this.driverList.entries[i].drivers.push({"playerID": car.car.drivers[driver_i].playerId});
+                this.driverList.entries[i].drivers.push({
+                  "firstName": car.car.drivers[driver_i].firstName,
+                  "lastName": car.car.drivers[driver_i].lastName,
+                  "shortName": car.car.drivers[driver_i].shortName,
+                  "playerID": car.car.drivers[driver_i].playerId
+                });
               }
             }
-          }
-
-          // fix for 1.8 include forcecarmodel if not already present
-
-          for(var j = 0; j < this.driverList.entries.length; j++) {
-            if(!this.driverList.entries[j].forcedCarModel)
-              this.driverList.entries[j].forcedCarModel = -1
           }
         }
       },

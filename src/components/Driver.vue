@@ -1,9 +1,22 @@
 <template>
     <div v-bind:class="[{'driver-container': true, 'invalid': driverData['laps'] <= 0 }]">
       <i class="fas fa-chevron-down pointer left" @click="dropdown($event)"></i>
-      #{{driverData["raceNumber"]}}
+      #{{driverData["raceNumber"]}} 
+      <span v-if="driverData['teamName']"> {{driverData['teamName']}}</span>
+      <span v-else-if="driverData['drivers'].length <= 1">
+        <span v-if="!showMenu && driverData['drivers'][0]['firstName']"> {{driverData['drivers'][0]['firstName'][0]}}. </span>
+        {{driverData['drivers'][0]['lastName']}}
+      </span>
       <i v-if="showMenu" class="far fa-times-circle pointer right" @click="removeEntry()"></i>
-      <i v-if="driverData['laps'] <= 0 || duplicateId" class="fas fa-exclamation-triangle right"></i>
+      <span v-else>
+        <span v-if="driverData['qualyTime']">
+          <span v-if="driverData['laps'] > 0">&nbsp;- {{getDateStr(driverData['qualyTime'])}}</span>
+          <span v-else>&nbsp;- No Time</span>
+        </span>
+        <span v-else>&nbsp;- {{driverData['laps']}} Laps</span>
+      </span>
+      <i v-if="duplicateId" class="fas fa-exclamation-triangle red right"></i>
+      <i v-if="driverData['laps'] <= 0 || driverData['laps'] < (driverData['raceTotalLaps'] / 2)" class="fas fa-exclamation-triangle right"></i>
       <div class="content">
         <div class="wrapper">
           <div>
@@ -11,7 +24,8 @@
             <ul class="car-drivers">
               <li v-for="driver in driverData['drivers']" :key="driver" class="car-driver">
                 <i :class="'fas fa-medal category-' + driver['driverCategory']"></i>
-                {{driver['firstName']}} "{{driver['nickName']}}" {{driver['lastName']}}
+                <span v-if="driver['nickname']">&nbsp;"{{driver['nickName']}}"</span>
+                <span v-else>&nbsp;{{driver['firstName']}} {{driver['lastName']}}</span>
               </li>
             </ul>
           </div>
@@ -49,16 +63,20 @@
             <div v-if="!showMenu" class="col-9">{{driverData['isServerAdmin'] ? "Car has admin privileges." : "Car is not an admin."}}</div>
             <div v-else class="col-9"><input type="checkbox" @click="changeAdmin($event)" :checked="driverData['isServerAdmin'] ? true : null"/> Server Admin</div>
           </div>
-          <div v-if="driverData['laps'] > 0" class="row">
+          <div v-if="driverData['laps'] > 0 && (driverData['qualyTime'] || driverData['laps'] >= (driverData['raceTotalLaps'] / 2))" class="row">
             <div class="col-3"><i class="fas fa-road"></i></div>
             <div class="col-9">Car has completed {{driverData['laps']}} laps.</div>
+          </div>
+          <div v-if="!driverData['qualyTime'] && driverData['laps'] > 0 && driverData['laps'] < (driverData['raceTotalLaps'] / 2)" class="row">
+            <div class="col-3"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="col-9">Car has not completed 50% of the race distance. It only completed {{driverData['laps']}} laps.</div>
           </div>
           <div v-if="driverData['laps'] <= 0" class="row errors">
             <div class="col-3"><i class="fas fa-exclamation-triangle"></i></div>
             <div class="col-9">This car has not completed any laps!</div>
           </div>
           <div v-if="duplicateId" class="row errors">
-            <div class="col-3"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="col-3"><i class="fas fa-exclamation-triangle red"></i></div>
             <div class="col-9">At least one driver of this car completed laps on another car!</div>
           </div>
         </div>
@@ -185,6 +203,30 @@
             value: "2020 Mercedes-AMG GT3"
           },
           {
+            key: "26",
+            value: "2022 Ferrari 488 Challenge Evo"
+          },
+          {
+            key: "27",
+            value: "2022 BMW M2 CS Racing"
+          },
+          {
+            key: "28",
+            value: "2022 Porsche 911 GT3 Cup (Type 992)"
+          },
+          {
+            key: "29",
+            value: "2022 Lamborghini Huracán Super Trofeo EVO2"
+          },
+          {
+            key: "30",
+            value: "2022 BMW M4 GT3"
+          },
+          {
+            key: "31",
+            value: "2022 Audi R8 LMS GT3 evo II"
+          },
+          {
             key: "50",
             value: "2018 Alpine A110 GT4"
           },
@@ -265,9 +307,16 @@
             return obj.value;
           }
         }
+
+        return key;
       },
       changeAdmin(event) {
         this.$emit('update-admin', event.target.value);
+      },
+      getDateStr(ms) {
+        var date = new Date(ms);
+
+        return date.getMinutes() + ':' + ("0" + date.getSeconds()).substr(-2) + "." + ("00" + date.getMilliseconds()).substr(-3);
       }
     }
   }
@@ -343,11 +392,13 @@
       visibility: visible;
     }
 
-    .car-selection-9 i {
+    .car-selection-9 i,
+    .car-selection-28 i {
       color: green;
     }
 
-    .car-selection-18 i {
+    .car-selection-18 i,
+    .car-selection-29 i {
       color: yellow;
     }
 
@@ -361,10 +412,18 @@
     .car-selection-58 i,
     .car-selection-59 i,
     .car-selection-60 i,
-    .car-selection-61 i
-    {
+    .car-selection-61 i {
         color: blue;
     } 
+
+    .car-selection-27 i {
+      color: turquoise;
+    }
+
+    .car-selection-26 i,
+    .red {
+      color: red;
+    }
 
     .fa-exclamation-triangle
     {

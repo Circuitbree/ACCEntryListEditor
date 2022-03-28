@@ -54,9 +54,10 @@
       reverse() {
         this.driverList = this.driverList.reverse();
       },
-      download(){
+      download() {
+        // copy initial list to a new object 
         var list = JSON.parse(JSON.stringify(this.initialList))
-
+        // copy entries from driverList containing changes made
         list['entries'] = this.driverList.map((item) => item["item"])
         
         for(var car of list['entries']) {
@@ -65,6 +66,16 @@
           if(car.laps)
           {
             delete car.laps;
+          }
+          
+          if(car.teamName)
+          {
+            delete car.teamName;
+          }
+
+          if(car.raceTotalLaps)
+          {
+            delete car.raceTotalLaps;
           }
         }
 

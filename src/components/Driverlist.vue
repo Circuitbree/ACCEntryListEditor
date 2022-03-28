@@ -67,12 +67,14 @@
           {
             delete car.laps;
           }
-          
           if(car.teamName)
           {
             delete car.teamName;
           }
-
+          if(car.qualyTime)
+          {
+            delete car.qualyTime;
+          }
           if(car.raceTotalLaps)
           {
             delete car.raceTotalLaps;

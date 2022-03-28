@@ -88,7 +88,7 @@
                 customCar: "",
                 raceNumber: car.car.raceNumber,
                 defaultGridPosition: i + 1,
-                forcedCarModel: car.carModel,
+                forcedCarModel: car.car.carModel,
                 overrideDriverInfo: 0,
                 isServerAdmin: 0,
                 overrideCarModelForCustomCar: 1,
@@ -100,8 +100,7 @@
                 raceTotalLaps: leaderboard[0].timing.lapCount
               });
 
-              for(var driver_i = 0; driver_i < car.car.drivers.length; driver_i++)
-              {
+              for(var driver_i = 0; driver_i < car.car.drivers.length; driver_i++) {
                 this.driverList.entries[i].drivers.push({
                   "firstName": car.car.drivers[driver_i].firstName,
                   "lastName": car.car.drivers[driver_i].lastName,

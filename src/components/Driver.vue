@@ -15,7 +15,7 @@
         </span>
         <span v-else>&nbsp;- {{driverData['laps']}} Laps</span>
       </span>
-      <i v-if="duplicateId" class="fas fa-exclamation-triangle red right"></i>
+      <i v-if="duplicateId" class="fas fa-exclamation-triangle red fa-outlined right"></i>
       <i v-if="driverData['laps'] <= 0 || driverData['laps'] < (driverData['raceTotalLaps'] / 2)" class="fas fa-exclamation-triangle right"></i>
       <div class="content">
         <div class="wrapper">
@@ -76,7 +76,7 @@
             <div class="col-9">This car has not completed any laps!</div>
           </div>
           <div v-if="duplicateId" class="row errors">
-            <div class="col-3"><i class="fas fa-exclamation-triangle red"></i></div>
+            <div class="col-3"><i class="fas fa-exclamation-triangle red fa-outlined"></i></div>
             <div class="col-9">At least one driver of this car completed laps on another car!</div>
           </div>
         </div>
@@ -425,8 +425,12 @@
       color: red;
     }
 
-    .fa-exclamation-triangle
-    {
+    .fa-exclamation-triangle {
       margin-right: 2%;
+    }
+
+    .fa-outlined {
+      -webkit-text-stroke-width: 0.6px;
+      -webkit-text-stroke-color: white;
     }
 </style>

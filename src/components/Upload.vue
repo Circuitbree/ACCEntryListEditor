@@ -88,7 +88,7 @@
                 customCar: "",
                 raceNumber: car.car.raceNumber,
                 defaultGridPosition: i + 1,
-                forcedCarModel: car.car.carModel,
+                forcedCarModel: car.car.carModel ? car.car.carModel : -1,
                 overrideDriverInfo: 0,
                 isServerAdmin: 0,
                 overrideCarModelForCustomCar: 1,
